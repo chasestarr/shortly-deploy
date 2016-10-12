@@ -38,9 +38,10 @@
     "mocha": "^2.4.5",
     "mongoose": "^4.4.10",
     "request": "^2.34.0",
-    "sqlite3": "~3.1.1"
+    "sqlite3": "^3.1.6"
   },
   "devDependencies": {
+    "grunt-contrib-clean": "^1.0.0",
     "supertest": "^1.2.0"
   }
 }
