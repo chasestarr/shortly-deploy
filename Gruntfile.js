@@ -12,8 +12,8 @@ module.exports = function(grunt) {
       }
     },
 
-    clean: ['public/build/dist.js'],
-    
+    clean: ['dist/build/build.js', 'dest/output.min.js'],
+
     mochaTest: {
       test: {
         options: {
@@ -30,11 +30,20 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      myTarget: {
+        files: {
+          'dest/output.min.js': ['dist/build/build.js']
+        }
+      }
     },
 
     eslint: {
+      // options: {
+      //   configFile: '',
+      //   rulePaths: ['']
+      // },
       target: [
-        // Add list of files to lint here
+        'app/config.js'
       ]
     },
 
@@ -60,6 +69,10 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push live master'
+      },
+      greet: {
+        command: greeting => 'echo ' + greeting
       }
     },
   });
@@ -86,20 +99,23 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', ['clean', 'lint', 'test']);
-  grunt.registerTask('deploy', ['build', 'concat', 'uglify']);
-
-  grunt.registerTask('upload', function(n) {
+  grunt.registerTask('build', ['clean', 'eslint', 'test']);
+  grunt.registerTask('deploy', function(n) {
     if (grunt.option('prod')) {
-      // add your production server task here
+      grunt.task.run(['build', 'concat', 'uglify', 'shell:greet:greetings master', 'shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your deploy tasks here
-  ]);
+  // grunt.registerTask('upload', function(n) {
+  //   if (grunt.option('prod')) {
+  //     // add your production server task here
+  //   } else {
+  //     grunt.task.run([ 'server-dev' ]);
+  //   }
+  // });
+
 
 
 };
