@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var urlSchema = require('../config').urlSchema;
 var crypto = require('crypto');
+mongoose.Promise = require('bluebird');
 
 var Link = mongoose.model('Link', urlSchema);
 

@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var userSchema = require('../config').userSchema;
-var bcrypt = require('bcrypt-nodejs');
 mongoose.Promise = require('bluebird');
 // assert.equal(query.exec().constructor, require('bluebird'));
 

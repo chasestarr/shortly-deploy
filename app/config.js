@@ -1,20 +1,59 @@
 var path = require('path');
+var bcrypt = require('bcrypt-nodejs');
+var Promise = require('bluebird');
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var Schema = mongoose.Schema;
 
-module.exports = {
-  urlSchema: new Schema({
-    url: String,
-    baseUrl: String,
-    code: String,
-    title: String,
-    visits: Number
-  }),
+mongoose.connect('mongodb://localhost/dev');
 
-  userSchema: new Schema({
-    username: String,
-    password: String
-  })
+var urlSchema = new Schema({
+  url: String,
+  baseUrl: String,
+  code: String,
+  title: String,
+  visits: Number
+});
+
+urlSchema.statics.setCode = function(link, cb) {
+  var shasum = crypto.createHash('sha1');
+  // shasum.update(model.get('url'));
+  shasum.update(link.url);
+  // TODO
+  // This does not update the document. Fix me.
+  this.findOneAndUpdate({url: link.url}, {'code': shasum.digest('hex').slice(0, 5)}, function (err, raw) {
+    console.log('raw', raw);
+    if (err) {
+      console.error(err, raw);
+    }
+    cb();
+  });
+};
+
+
+
+var userSchema = new Schema({
+  username: String,
+  password: String
+});
+
+userSchema.statics.comparePassword = function(attemptedPassword, password, callback) {
+  bcrypt.compare(attemptedPassword, password, function(err, isMatch) {
+    callback(isMatch);
+  });
+};
+
+userSchema.statics.hashPassword = function() {
+  var cipher = Promise.promisify(bcrypt.hash);
+  return cipher(this.get('password'), null, null).bind(this)
+    .then(function(hash) {
+      this.set('password', hash);
+    });
+};
+
+module.exports = {
+  urlSchema: urlSchema,
+  userSchema: userSchema
 };
 
 
