@@ -99,7 +99,8 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', ['clean', 'eslint', 'test']);
+  grunt.registerTask('default', 'build');
+  grunt.registerTask('build', ['clean', 'test']);
   grunt.registerTask('deploy', function(n) {
     if (grunt.option('prod')) {
       grunt.task.run(['build', 'concat', 'uglify', 'shell:greet:greetings master', 'shell:prodServer']);
