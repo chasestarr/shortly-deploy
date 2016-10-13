@@ -17,7 +17,6 @@ var urlSchema = new Schema({
 
 urlSchema.statics.setCode = function(link, cb) {
   var shasum = crypto.createHash('sha1');
-  // shasum.update(model.get('url'));
   shasum.update(link.url);
   this.findOneAndUpdate({url: link.url}, {code: shasum.digest('hex').slice(0, 5)}, {new: true}, function (err, raw) {
     if (err) {
@@ -35,17 +34,20 @@ var userSchema = new Schema({
 });
 
 userSchema.statics.comparePassword = function(attemptedPassword, password, callback) {
+  // console.log('attempted password: ', attemptedPassword, '\npassword: ', password);
   bcrypt.compare(attemptedPassword, password, function(err, isMatch) {
     callback(isMatch);
   });
 };
 
-userSchema.statics.hashPassword = function() {
-  var cipher = Promise.promisify(bcrypt.hash);
-  return cipher(this.get('password'), null, null).bind(this)
-    .then(function(hash) {
-      this.set('password', hash);
-    });
+userSchema.statics.hashPassword = function(password) {
+  return bcrypt.hashSync(password);
+
+  // var cipher = Promise.promisify(bcrypt.hash);
+  // return cipher(this.get('password'), null, null).bind(this)
+  //   .then(function(hash) {
+  //     this.set('password', hash);
+  //   });
 };
 
 module.exports = {

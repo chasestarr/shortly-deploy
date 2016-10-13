@@ -21,11 +21,30 @@ describe('', function() {
 
         // Delete objects from db so they can be created later for the test
         Link.remove({url: 'http://www.roflzoo.com/'}).exec();
-        User.remove({username: 'Savannah'}).exec();
+        User.remove({username: 'Svnh'}).exec();
         User.remove({username: 'Phillip'}).exec();
+        // User.find({}, function(err, data) {
+        //   if (err) {
+        //     console.error(err);
+        //   } else {
+        //     console.log('Post-Remove Data: ', data);
+        //   }
+        // });
 
         done();
       });
+  });
+
+  afterEach(function(done) {
+    User.find({}, function(err, data) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('after each: ', data);
+      }
+    });
+
+    done();
   });
 
   describe('Link creation: ', function() {
@@ -227,8 +246,8 @@ describe('', function() {
       request(app)
         .post('/login')
         .send({
-          'username': 'Phillip',
-          'password': 'Phillip' })
+          'username': 'Svnh',
+          'password': 'Svnh' })
         .expect(302)
         .expect(function(res) {
           expect(res.headers.location).to.equal('/');
