@@ -48,7 +48,6 @@ describe('', function() {
             'url': 'http://www.roflzoo.com/'})
           .expect(200)
           .expect(function(res) {
-            console.log('=======', res.body, '======');
             expect(res.body.url).to.equal('http://www.roflzoo.com/');
             expect(res.body.code).to.be.ok;
           })
@@ -99,8 +98,15 @@ describe('', function() {
           visits: 0
         });
 
-        link.save(function() {
-          done();
+        link.save().then(function() {
+          Link.setCode(link, function(err, data) {
+            if (err) {
+              console.log(err);
+            } else {
+              link = data;
+              done();
+            }
+          });
         });
       });
 
