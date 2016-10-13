@@ -3,6 +3,7 @@
 .LSOverride
 iisnode.yml
 npm-debug.log
+yarn.lock
 
 db/shortly.sqlite
 node_modules

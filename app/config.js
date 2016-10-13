@@ -19,14 +19,13 @@ urlSchema.statics.setCode = function(link, cb) {
   var shasum = crypto.createHash('sha1');
   // shasum.update(model.get('url'));
   shasum.update(link.url);
-  // TODO 
+  // TODO
   // This does not update the document. Fix me.
-  this.findOneAndUpdate({url: link.url}, {'code': shasum.digest('hex').slice(0, 5)}, function (err, raw) {
-    console.log('raw', raw);
+  this.findOneAndUpdate({url: link.url}, {code: shasum.digest('hex').slice(0, 5)}, {new: true}, function (err, raw) {
     if (err) {
       console.error(err, raw);
     }
-    cb();
+    cb(err, raw);
   });
 };
 
