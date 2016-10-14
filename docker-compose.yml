@@ -1,0 +1,19 @@
+version: '2'
+services:
+
+  web:
+    image: node:latest
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - "80:4568"
+    depends_on:
+      - mongo
+    environment:
+      MONGODB_URI: "mongodb://mongo:27017/dev"
+    command: node server.js
+
+  mongo:
+    image: mongo
+    command: mongod --smallfiles

@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://localhost/dev');
+mongoose.connect(process.env.MONGODB_URI);
 
 var urlSchema = new Schema({
   url: String,
